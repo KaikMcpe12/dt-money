@@ -6,17 +6,6 @@ O **DT Money** não é apenas um dashboard de finanças; é um laboratório de a
 
 ---
 
-## ⚡ Por que este projeto é diferente?
-
-Diferente de CRUDS simples, o DT Money foi construído sob o mantra **"Performance First"**. 
-
-* **Context API + Seletores:** Gerenciamento de estado global inteligente.
-* **Zero Junk Renders:** Uso estratégico de estratégias de otimização para garantir que apenas o necessário seja renderizado.
-* **Formulários de Alta Performance:** Utiliza *Uncontrolled Components* via `react-hook-form` para evitar lag de digitação.
-* **Schema Validation:** Dados validados rigorosamente com `Zod` antes de qualquer processamento.
-
----
-
 ## 📸 Interface
 
 O design foca no que importa: clareza nos números e facilidade de busca.
@@ -41,7 +30,7 @@ O design foca no que importa: clareza nos números e facilidade de busca.
 
 ### Clonagem e Dependências
 ```bash
-git clone ---
+git clone https://github.com/KaikMcpe12/dt-money.git
 cd dt-money
 npm install
 ```

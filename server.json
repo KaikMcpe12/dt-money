@@ -1,0 +1,36 @@
+{
+  "transactions": [
+    {
+      "id": 1,
+      "description": "Initial deposit",
+      "type": "income",
+      "category": "Venda",
+      "price": 1000,
+      "createdAt": "2023-01-01T00:00:00Z"
+    },
+    {
+      "id": 2,
+      "description": "Hamburguer",
+      "type": "outcome",
+      "category": "Alimentação",
+      "price": 50,
+      "createdAt": "2023-01-02T00:00:00Z"
+    },
+    {
+      "id": 3,
+      "description": "Aluguel",
+      "type": "outcome",
+      "category": "Moradia",
+      "price": 1000,
+      "createdAt": "2023-01-03T00:00:00Z"
+    },
+    {
+      "id": 4,
+      "description": "Salário",
+      "type": "income",
+      "category": "Salário",
+      "price": 3000,
+      "createdAt": "2023-01-04T00:00:00Z"
+    }
+  ]
+}

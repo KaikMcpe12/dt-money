@@ -1,10 +1,11 @@
-import { createContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "../lib/axios";
+import { createContext } from "use-context-selector";
 
 interface Transaction {
   id: string;
   description: string;
-  type: 'income' | 'outcome';
+  type: "income" | "outcome";
   price: number;
   category: string;
   createdAt: string;
@@ -14,7 +15,7 @@ interface CreateTransactionInput {
   description: string;
   price: number;
   category: string;
-  type: 'income' | 'outcome'
+  type: "income" | "outcome";
 }
 
 interface TransactionsContextType {
@@ -28,48 +29,53 @@ interface TransactionsProviderProps {
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const TransactionsContext = createContext({} as TransactionsContextType)
+export const TransactionsContext = createContext({} as TransactionsContextType);
 
 export function TransactionsProvider({ children }: TransactionsProviderProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  async function fetchTransactions(query?: string) {
-    const response = await api.get('transactions', {
+  const fetchTransactions = useCallback(async (query?: string) => {
+    const response = await api.get("transactions", {
       params: {
-        _sort: '-createdAt',
-        description: query
-      }
-    })
-    
-    setTransactions(response.data)
-  }
-  
-  async function createTransaction(data: CreateTransactionInput) {
-    const { description, price, category, type } = data;
-    
-    const response = await api.post('transactions', {
-      description,
-      price,
-      category,
-      type,
-      createdAt: new Date(),
-    })
-    
-    setTransactions((state) => [response.data, ...state])
-  }
+        _sort: "-createdAt",
+        description: query,
+      },
+    });
+
+    setTransactions(response.data);
+  }, []);
+
+  const createTransaction = useCallback(
+    async (data: CreateTransactionInput) => {
+      const { description, price, category, type } = data;
+
+      const response = await api.post("transactions", {
+        description,
+        price,
+        category,
+        type,
+        createdAt: new Date(),
+      });
+
+      setTransactions((state) => [response.data, ...state]);
+    },
+    [],
+  );
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchTransactions ()
-  }, [])
-  
+    fetchTransactions();
+  }, [fetchTransactions]);
+
   return (
-    <TransactionsContext.Provider value={{
-      transactions,
-      fetchTransactions,
-      createTransaction
-    }}>
-      { children }
+    <TransactionsContext.Provider
+      value={{
+        transactions,
+        fetchTransactions,
+        createTransaction,
+      }}
+    >
+      {children}
     </TransactionsContext.Provider>
-  )
+  );
 }

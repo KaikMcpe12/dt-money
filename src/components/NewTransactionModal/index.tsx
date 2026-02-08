@@ -1,24 +1,33 @@
-import * as Dialog from '@radix-ui/react-dialog';
-import { CloseButton, Content, Overlay, TransactionType, TransactionTypeButton } from './styles';
-import { ArrowCircleDown, ArrowCircleUp, X } from 'phosphor-react';
-import { z } from 'zod';
-import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useContext } from 'react';
-import { TransactionsContext } from '../../contexts/TransactionsContext';
+import * as Dialog from "@radix-ui/react-dialog";
+import {
+  CloseButton,
+  Content,
+  Overlay,
+  TransactionType,
+  TransactionTypeButton,
+} from "./styles";
+import { ArrowCircleDown, ArrowCircleUp, X } from "phosphor-react";
+import { z } from "zod";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TransactionsContext } from "../../contexts/TransactionsContext";
+import { useContextSelector } from "use-context-selector";
 
 const newTransactionFormSchema = z.object({
   description: z.string(),
   price: z.number().min(0),
   category: z.string(),
-  type: z.enum(['income', 'outcome'])
-})
+  type: z.enum(["income", "outcome"]),
+});
 
 type NewTransactionFormInputs = z.infer<typeof newTransactionFormSchema>;
 
 export function NewTransactionModal() {
-  const { createTransaction } = useContext(TransactionsContext);
-  
+  const createTransaction = useContextSelector(
+    TransactionsContext,
+    (context) => context.createTransaction,
+  );
+
   const {
     control,
     register,
@@ -28,60 +37,58 @@ export function NewTransactionModal() {
   } = useForm<NewTransactionFormInputs>({
     resolver: zodResolver(newTransactionFormSchema),
     defaultValues: {
-      type: 'income'
-    }
-  })
-  
+      type: "income",
+    },
+  });
+
   async function handleCreateNewTransaction(data: NewTransactionFormInputs) {
     const { description, price, category, type } = data;
-    
+
     await createTransaction({
       description,
       price,
       category,
-      type
-    })
-    
-    reset()
+      type,
+    });
+
+    reset();
   }
-  
+
   return (
-    <Dialog.Portal> 
-     {/* faz com que o seu conteúdo seja colocado de forma separada de seu componente pai ou pertencente a outro componente */}
-      <Overlay /> 
+    <Dialog.Portal>
+      {/* faz com que o seu conteúdo seja colocado de forma separada de seu componente pai ou pertencente a outro componente */}
+      <Overlay />
       {/* fundo preto*/}
-      
+
       <Content>
-        <Dialog.Title>
-          Nova Transação
-        </Dialog.Title>
-        
-        <CloseButton >
+        <Dialog.Title>Nova Transação</Dialog.Title>
+
+        <CloseButton>
           <X size={24} />
         </CloseButton>
-        
+
         <form onSubmit={handleSubmit(handleCreateNewTransaction)}>
-          <input 
+          <input
             type="text"
             placeholder="Descrição"
             required
-            {...register('description')}
+            {...register("description")}
           />
-          
-          <input 
+
+          <input
             type="number"
             placeholder="Preço"
             required
-            {...register('price', { valueAsNumber: true })}
+            {...register("price", { valueAsNumber: true })}
           />
-          
+
           <input
             type="text"
             placeholder="Categoria"
             required
-            {...register('category')}
+            {...register("category")}
           />
-          
+
           <Controller
             control={control}
             name="type"
@@ -92,23 +99,24 @@ export function NewTransactionModal() {
                   value={field.value}
                 >
                   <TransactionTypeButton variant="income" value="income">
-                    <ArrowCircleUp size={24}  />
+                    <ArrowCircleUp size={24} />
                     Entrada
                   </TransactionTypeButton>
-                  
+
                   <TransactionTypeButton variant="outcome" value="outcome">
-                    <ArrowCircleDown size={24}  />
+                    <ArrowCircleDown size={24} />
                     Saída
                   </TransactionTypeButton>
                 </TransactionType>
-              )
+              );
             }}
           />
-          
-          <button type="submit" disabled={isSubmitting}>Cadastrar</button>
+
+          <button type="submit" disabled={isSubmitting}>
+            Cadastrar
+          </button>
         </form>
-        
       </Content>
     </Dialog.Portal>
-  )
+  );
 }
